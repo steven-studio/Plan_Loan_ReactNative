@@ -75,7 +75,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
   // Language handlers
   const handleLanguagePress = () => setShowLanguageModal(true);
   
-  const handleLanguageSelect = async (lang: 'en' | 'zh') => {
+  const handleLanguageSelect = async (lang: 'en' | 'zh-Hans' | 'zh-Hant') => {
     await changeAppLanguage(lang);
     setShowLanguageModal(false);
  
@@ -403,8 +403,9 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
             </Text>
 
             {[
-              { lang: 'en', label: strings.english, flag: '🇺🇸' },
-              { lang: 'zh', label: strings.chinese, flag: '🇨🇳' }
+              { lang: 'en',      label: strings.english,             flag: '🇺🇸' },
+              { lang: 'zh-Hans', label: strings.chineseSimplified,   flag: '🇨🇳' },
+              { lang: 'zh-Hant', label: strings.chineseTraditional,  flag: '🇹🇼' },
             ].map((language) => (
               <TouchableOpacity 
                 key={language.lang}
