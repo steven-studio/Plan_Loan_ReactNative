@@ -23,6 +23,11 @@ export default function HomeScreen() {
   const route = useRoute();
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
 
+  // 添加這些 state
+  const [loanLimit, setLoanLimit] = useState(10000);
+  const [loanProgress, setLoanProgress] = useState(75);
+  const userName = route.params?.userName || 'Steve';
+
   // 這些資料應該來自 API 或 state
   const loanHistoryData = [
     { type: 'received', amount: 30000, date: '2024-01-01' },
@@ -145,14 +150,18 @@ export default function HomeScreen() {
               source={require('../../assets/images/home/greeting-avatar.png')}
               style={styles.avatar}
             />
-            <Text style={styles.greetingText}>Hi Steve!</Text>
+            <Text style={styles.greetingText}>
+              {formatString(strings.Greeting, { name: userName })}
+            </Text>
           </View>
           <Text style={styles.loanText}>{strings.YourLoanLimit}</Text>
-          <Text style={styles.loanAmount}>NT $ 10,000</Text>
+          <Text style={styles.loanAmount}>
+            {formatCurrency(loanLimit)}
+          </Text>
 
           {/* Progress Bar */}
           <View style={styles.progressBg}>
-            <View style={[styles.progressFill, { width: '75%' }]} />
+            <View style={[styles.progressFill, { width: `${loanProgress}%` }]} />
           </View>
 
           <View style={styles.borrowMoreContainer}>
@@ -185,7 +194,7 @@ export default function HomeScreen() {
             style={styles.repaidRight}
             resizeMode="stretch"
           >
-            <Text style={styles.repaidPercentage}>75%</Text>
+            <Text style={styles.repaidPercentage}>{loanProgress}%</Text>
           </ImageBackground>
         </View>
 
