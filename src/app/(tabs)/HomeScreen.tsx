@@ -161,7 +161,7 @@ export default function HomeScreen() {
               onPress={() => navigation.navigate('ApplyLoanScreen')}
               // onPress={() => navigation.navigate('ApplyLoan')}
             >
-              <Text style={styles.borrowMoreText}>{strings.home} Want To Borrow More?</Text>
+              <Text style={styles.borrowMoreText}>{strings.wantTo}</Text>
               {/* <Text style={styles.borrowMoreText}>想要借更多嗎?</Text> */}
             </TouchableOpacity>
           </View>
