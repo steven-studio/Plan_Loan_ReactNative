@@ -147,7 +147,7 @@ export default function HomeScreen() {
             />
             <Text style={styles.greetingText}>Hi Steve!</Text>
           </View>
-          <Text style={styles.loanText}>您的可貸額度為</Text>
+          <Text style={styles.loanText}>{strings.YourLoanLimit}</Text>
           <Text style={styles.loanAmount}>NT $ 10,000</Text>
 
           {/* Progress Bar */}

@@ -10,14 +10,23 @@ import {
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import strings, { loadLanguage } from "../../../Languages";
+
+type RootStackParamList = {
+  NotificationsScreen: undefined;
+  Login: undefined;
+  RepayLoan: undefined;
+};
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const Navbar = require('../../../components/Navbar').default;
 const HamburgerMenu = require('../../../components/HamburgerMenu').default;
 
 export default function LoanScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
 
   const handleLogout = () => {
@@ -38,15 +47,15 @@ export default function LoanScreen() {
     );
   };
 const payments = [
-  { label: "Next Payment", value: "10 Oct 2025" },
-  { label: "Due Amount", value: "$250" },
-  { label: "Status", value: "Paid" }
+  { label: strings.NextPayment, value: "10 Oct 2025" },
+  { label: strings.DueAmount, value: "$250" },
+  { label: strings.Status, value: strings.Paid }
 ];
 const payments2 = [
-  { label: "Interest Rate", value: "8.5% p.a." },
-   { label: "Monthly Payment", value: "NT $2,500" }
+  { label: strings.InterestRate, value: "8.5% p.a." },
+  { label: strings.MonthlyPayment, value: "NT $2,500" }
 ];
-  const handleCallPress = async (number) => {
+  const handleCallPress = async (number: string) => {
     const url = `tel:${number}`; // iOS/Android dono ke liye kaam karta hai
     try {
       const supported = await Linking.canOpenURL(url);
@@ -108,7 +117,7 @@ const payments2 = [
                 padding: 8,
                 marginRight: 16
               }}
-                       onPress={() => handleCallPress("904834")}
+              onPress={() => handleCallPress("904834")}
 
             >
               <Image
@@ -124,7 +133,7 @@ const payments2 = [
                 borderRadius: 12,
                 padding: 8
               }}
-              onPress={() => navigation.navigate('Notifications')}
+              onPress={() => navigation.navigate('NotificationsScreen')}
             >
               <Image
                 source={require('../../../assets/images/icons/notification.png')}

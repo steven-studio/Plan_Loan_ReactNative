@@ -19,6 +19,10 @@
   "repayLoan": "還款",
   "loanRepayment": "貸款還款",
   "LoanInformation": "貸款資訊",
+  "YourLoanLimit": "您的可貸額度為",
+  "Greeting": "嗨 {name}！",
+  "Unpaid": "未付款",
+  "Pending": "處理中",
   "wantTo": "想要借更多嗎？",
   "RepaidAmount": "已還金額",
   "LoremIpsum": "隨機文字",
@@ -87,5 +91,11 @@
   "GoogleSignIn": "Google 登入",
   "AppleSignIn": "Apple 登入",
   "DevelopmentPlaceholder": "開發測試模式",
-  "SignIn": "登入"
+  "SignIn": "登入",
+  "NextPayment": "下次付款",
+  "DueAmount": "應付金額",
+  "Status": "狀態",
+  "Paid": "已付款",
+  "InterestRate": "利率",
+  "MonthlyPayment": "每月付款"
 }

@@ -19,6 +19,7 @@
   "repayLoan": "Repay Loan",
   "loanRepayment": "Loan Repayment",
   "LoanInformation": "Loan Information",
+  "YourLoanLimit": "Your loan limit is",
   "wantTo": "Want To Borrow More?",
   "RepaidAmount": "Repaid Amount",
   "LoremIpsum": "Lorem Ipsum",
@@ -87,5 +88,11 @@
   "GoogleSignIn": "Google Sign-In",
   "AppleSignIn": "Apple Sign-In",
   "DevelopmentPlaceholder": "Development placeholder",
-  "SignIn": "Sign In"
+  "SignIn": "Sign In",
+  "NextPayment": "Next Payment",
+  "DueAmount": "Due Amount",
+  "Status": "Status",
+  "Paid": "Paid",
+  "InterestRate": "Interest Rate",
+  "MonthlyPayment": "Monthly Payment"
 }
