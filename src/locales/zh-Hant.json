@@ -80,5 +80,12 @@
   "PasswordLabel": "密碼",
   "ForgotPassword": "忘記密碼?",
   "NoAccount": "還沒有帳號嗎?",
-  "SignUp": "註冊"
+  "SignUp": "註冊",
+  "Error": "錯誤",
+  "PleaseEnterEmail": "請輸入您的電子郵件",
+  "PleaseEnterPassword": "請輸入您的密碼",
+  "GoogleSignIn": "Google 登入",
+  "AppleSignIn": "Apple 登入",
+  "DevelopmentPlaceholder": "開發測試模式",
+  "SignIn": "登入"
 }

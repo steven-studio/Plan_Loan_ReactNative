@@ -80,5 +80,12 @@
   "PasswordLabel": "密码",
   "ForgotPassword": "忘记密码?",
   "NoAccount": "还没有帐户吗?",
-  "SignUp": "注册"
+  "SignUp": "注册",
+  "Error": "错误",
+  "PleaseEnterEmail": "请输入您的邮箱",
+  "PleaseEnterPassword": "请输入您的密码",
+  "GoogleSignIn": "谷歌登入",
+  "AppleSignIn": "苹果登入",
+  "DevelopmentPlaceholder": "开发测试模式",
+  "SignIn": "登入"
 }

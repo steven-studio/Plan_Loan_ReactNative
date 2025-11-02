@@ -80,5 +80,12 @@
   "PasswordLabel": "Password",
   "ForgotPassword": "Forgot password?",
   "NoAccount": "Don’t have an account?",
-  "SignUp": "Sign up"
+  "SignUp": "Sign up",
+  "Error": "Error",
+  "PleaseEnterEmail": "Please enter your email",
+  "PleaseEnterPassword": "Please enter your password",
+  "GoogleSignIn": "Google Sign-In",
+  "AppleSignIn": "Apple Sign-In",
+  "DevelopmentPlaceholder": "Development placeholder",
+  "SignIn": "Sign In"
 }

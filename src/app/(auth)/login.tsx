@@ -46,17 +46,18 @@ const LoginScreen: React.FC<Props> = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
-    navigation.navigate('TabLayout', { identifier: email, isPhone: 'false' });
 
     // if (!email) {
-    //   Alert.alert('Error', 'Please enter your email');
+    //   Alert.alert(strings.Error, strings.PleaseEnterEmail);
     //   return;
     // }
 
     // if (!password) {
-    //   Alert.alert('Error', 'Please enter your password');
+    //   Alert.alert(strings.Error, strings.PleaseEnterPassword);
     //   return;
     // }
+
+    navigation.navigate('TabLayout', { identifier: email, isPhone: 'false' });
 
     // try {
     //   setLoading(true);
