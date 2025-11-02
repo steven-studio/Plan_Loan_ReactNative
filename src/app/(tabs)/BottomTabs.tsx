@@ -13,6 +13,22 @@ import strings from '../../Languages';
 const Tab = createBottomTabNavigator();
 
 const CustomTabBar = ({ state, descriptors, navigation }: any) => {
+  // 在這裡動態獲取標籤文字
+  const getTabLabel = (routeName: string) => {
+    switch (routeName) {
+      case 'Home':
+        return strings.home;
+      case 'Loan':
+        return strings.loan;
+      case 'Help':
+        return strings.Help;
+      case 'Notifications':
+        return strings.Profile;
+      default:
+        return routeName;
+    }
+  };
+
   return (
     <View style={styles.tabBar}>
       {state.routes.map((route: any, index: number) => {

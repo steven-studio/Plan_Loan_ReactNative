@@ -48,7 +48,7 @@ export default function LoanScreen() {
   };
 const payments = [
   { label: strings.NextPayment, value: "10 Oct 2025" },
-  { label: strings.DueAmount, value: "$250" },
+  { label: strings.DueAmount, value: "$2500" },
   { label: strings.Status, value: strings.Paid }
 ];
 const payments2 = [
@@ -242,7 +242,7 @@ const payments2 = [
 					marginTop:15,
 				  }}>{strings.LoanInformation}</Text>
 			<View>
-  {payments.map((item, index) => (
+  {payments2.map((item, index) => (
     <View
       key={index}
       style={{
