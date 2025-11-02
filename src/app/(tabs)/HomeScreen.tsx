@@ -26,6 +26,8 @@ export default function HomeScreen() {
   // 添加這些 state
   const [loanLimit, setLoanLimit] = useState(10000);
   const [loanProgress, setLoanProgress] = useState(75);
+  const repaidAmount = loanLimit * (loanProgress / 100);
+  const remainingAmount = loanLimit - repaidAmount;
   const userName = route.params?.userName || 'Steve';
 
   // 這些資料應該來自 API 或 state
@@ -186,7 +188,9 @@ export default function HomeScreen() {
             <View style={styles.repaidTextContainer}>
               <Text style={styles.repaidTitle}>{strings?.RepaidAmount}</Text>
               {/* <Text style={styles.repaidTitle}>已還款金額</Text> */}
-              <Text style={styles.repaidSubtitle}>{strings?.LoremIpsum}</Text>
+              <Text style={styles.repaidSubtitle}>
+                {formatCurrency(repaidAmount)}
+              </Text>
             </View>
           </View>
           <ImageBackground
