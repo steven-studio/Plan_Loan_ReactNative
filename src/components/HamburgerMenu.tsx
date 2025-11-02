@@ -409,7 +409,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
             ].map((language) => (
               <TouchableOpacity 
                 key={language.lang}
-                onPress={() => handleLanguageSelect(language.lang as 'en' | 'zh')}
+                onPress={() => handleLanguageSelect(language.lang as 'en' | 'zh-Hans' | 'zh-Hant')}
                 style={{ marginBottom: 12 }}
               >
                 <View style={{ 

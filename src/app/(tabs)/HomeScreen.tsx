@@ -13,6 +13,7 @@ import {
 import { useNavigation, useRoute, NavigationProp } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import strings from "../../Languages";
+import { formatCurrency, formatString } from "../../utils/i18nHelper";
 
 const Navbar = require('../../components/Navbar').default;
 const HamburgerMenu = require('../../components/HamburgerMenu').default;
@@ -22,7 +23,56 @@ export default function HomeScreen() {
   const route = useRoute();
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
 
-  const handleCallPress = async (number) => {
+  // 這些資料應該來自 API 或 state
+  const loanHistoryData = [
+    { type: 'received', amount: 30000, date: '2024-01-01' },
+    { type: 'disbursed', amount: 30000, date: '2024-01-02' },
+    { type: 'approved', amount: 30000, date: '2024-01-03' },
+    { type: 'received', amount: 25000, date: '2024-01-04' },
+    { type: 'declined', amount: 0, date: '2024-01-05' },
+  ];
+
+  // 將資料轉換成顯示格式
+  const getLoanHistoryItems = () => {
+    return loanHistoryData.map(item => {
+      switch (item.type) {
+        case 'received':
+          return {
+            img: 'loan-received',
+            title: strings.LoanReceived,
+            desc: formatString(strings.LoanReceivedDesc, { 
+              amount: formatCurrency(item.amount) 
+            }),
+          };
+        case 'disbursed':
+          return {
+            img: 'loan-disbursed',
+            title: strings.LoanDisbursed,
+            desc: formatString(strings.LoanDisbursedDesc, { 
+              amount: formatCurrency(item.amount) 
+            }),
+          };
+        case 'approved':
+          return {
+            img: 'loan-approved',
+            title: strings.LoanApproved,
+            desc: formatString(strings.LoanApprovedDesc, { 
+              amount: formatCurrency(item.amount) 
+            }),
+          };
+        case 'declined':
+          return {
+            img: 'loan-declined',
+            title: strings.LoanDeclined,
+            desc: strings.LoanDeclinedDesc,
+          };
+        default:
+          return null;
+      }
+    }).filter(item => item !== null);
+  };
+
+  const handleCallPress = async (number: string) => {
     const url = `tel:${number}`; // iOS/Android dono ke liye kaam karta hai
     try {
       const supported = await Linking.canOpenURL(url);
@@ -151,13 +201,7 @@ export default function HomeScreen() {
           </View>
 
           {/* Loan History Items */}
-          {[
-            { img: 'loan-received', title: '貸款已入帳', desc: 'Loan of N30,000 was received' },
-            { img: 'loan-disbursed', title: '貸款已撥款', desc: 'N30,000 was disbursed to your bank' },
-            { img: 'loan-approved', title: '貸款已核准', desc: 'N30,000 was approved' },
-            { img: 'loan-received', title: '貸款已入帳', desc: 'Loan of N30,000 was received' },
-            { img: 'loan-declined', title: '貸款已拒絕', desc: 'We’re sorry! your loan was declined' },
-          ].map((item, index) => (
+          {getLoanHistoryItems().map((item, index) => (
             <View key={index} style={styles.historyItem}>
               <View style={styles.historyItemLeft}>
                 <Image

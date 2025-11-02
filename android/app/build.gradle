@@ -3,6 +3,16 @@ apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services'
 
+import java.util.Properties
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+
+def mapsApiKey = localProperties.getProperty("MAPS_API_KEY", "")
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -80,11 +90,14 @@ android {
 
     namespace 'dev.ingenius.chewbe'   // <- Add this line if not present
     defaultConfig {
-               applicationId "dev.ingenius.chewbe"
+        applicationId "dev.ingenius.chewbe"
         minSdkVersion 26              // already fine
         targetSdkVersion 35           // <--- updated
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [
+            MAPS_API_KEY: mapsApiKey
+        ]
     }
     signingConfigs {
         debug {

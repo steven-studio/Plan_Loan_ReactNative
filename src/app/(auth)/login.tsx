@@ -46,7 +46,7 @@ const LoginScreen: React.FC<Props> = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
-          navigation.navigate('TabLayout', { identifier: email, isPhone: 'false' });
+    navigation.navigate('TabLayout', { identifier: email, isPhone: 'false' });
 
     // if (!email) {
     //   Alert.alert('Error', 'Please enter your email');
@@ -152,10 +152,10 @@ const LoginScreen: React.FC<Props> = () => {
                 }}
               >
                 <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#fff', marginBottom: 8 }}>
-                  歡迎回來
+                  {strings.WelcomeBack}
                 </Text>
                 <Text style={{ fontSize: 16, color: 'rgba(255,255,255,0.8)' }}>
-                  輸入您的電子郵件與密碼以登入
+                  {strings.LoginSubtitle}
                 </Text>
               </View>
             </View>
@@ -174,7 +174,7 @@ const LoginScreen: React.FC<Props> = () => {
               }}
             >
               <Text style={{ fontSize: 16, fontWeight: '500', color: '#4B5563', marginBottom: 8 }}>
-                電子郵件
+                {strings.Email}
               </Text>
          <CustomInput
               placeholder={strings?.EnteryourEmail}
@@ -183,7 +183,7 @@ const LoginScreen: React.FC<Props> = () => {
               
               />
               <Text style={{ marginTop:11, fontSize: 16, fontWeight: '500', color: '#4B5563', marginBottom: 8 }}>
-                密碼
+                {strings.PasswordLabel}
               </Text>
                 <CustomInput
               placeholder={strings?.Password}
@@ -199,7 +199,7 @@ const LoginScreen: React.FC<Props> = () => {
                 style={{ alignSelf: 'flex-end', marginBottom: 20 }}
                 onPress={() => navigation.push('ForgotPassword')}
               >
-                <Text style={{ color: '#2563EB', marginTop:15 ,fontSize: 14, fontWeight: '500' }}>忘記密碼?</Text>
+                <Text style={{ color: '#2563EB', marginTop:15 ,fontSize: 14, fontWeight: '500' }}>{strings.ForgotPassword}</Text>
               </TouchableOpacity>
 {/* 
               <Button
@@ -218,7 +218,7 @@ const LoginScreen: React.FC<Props> = () => {
               <View style={{  flexDirection: 'row', alignItems: 'center', marginVertical: 24 }}>
                 <View style={{ flex: 1, height: 1, backgroundColor: '#E5E7EB' }} />
                 <Text style={{ marginHorizontal: 16, color: '#6B7280', fontSize: 12 }}>
-                  或選擇其他登入方式
+                  {strings.OtherSignIn}
                 </Text>
                 <View style={{ flex: 1, height: 1, backgroundColor: '#E5E7EB' }} />
               </View>
@@ -245,7 +245,7 @@ const LoginScreen: React.FC<Props> = () => {
                     style={{ width: 24, height: 24, marginRight: 12 }}
                     resizeMode="contain"
                   />
-                  <Text style={{ color: '#4B5563', fontSize: 14, fontWeight: '500' }}>谷歌</Text>
+                  <Text style={{ color: '#4B5563', fontSize: 14, fontWeight: '500' }}>{strings.Google}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{
@@ -267,15 +267,15 @@ const LoginScreen: React.FC<Props> = () => {
                     style={{ width: 24, height: 24, marginRight: 12 }}
                     resizeMode="contain"
                   />
-                  <Text style={{ color: '#4B5563', fontSize: 14, fontWeight: '500' }}>苹果</Text>
+                  <Text style={{ color: '#4B5563', fontSize: 14, fontWeight: '500' }}>{strings.Apple}</Text>
                 </TouchableOpacity>
               </View>
 
               {/* Footer */}
               <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 24 }}>
-                <Text style={{ color: '#6B7280', fontSize: 14 }}>還沒有帳號嗎? </Text>
+                <Text style={{ color: '#6B7280', fontSize: 14 }}>{strings.NoAccount} </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                  <Text style={{ color: '#1E40AF', fontSize: 14, fontWeight: '600' }}>註冊</Text>
+                  <Text style={{ color: '#1E40AF', fontSize: 14, fontWeight: '600' }}>{strings.SignUp}</Text>
                 </TouchableOpacity>
               </View>
             </View>

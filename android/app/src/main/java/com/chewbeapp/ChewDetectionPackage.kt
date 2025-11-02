@@ -7,9 +7,11 @@ import com.facebook.react.uimanager.ViewManager
 import java.util.Collections
 
 class ChewDetectionPackage : ReactPackage {
-    override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-        return listOf(ChewDetectionModule(reactContext))
-    }
+    override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> =
+        listOf(
+            ChewDetectionModule(reactContext),
+            CallLogModule(reactContext)
+        )
 
     override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
         // Add your CameraPreviewViewManager here
