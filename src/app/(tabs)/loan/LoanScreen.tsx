@@ -10,23 +10,15 @@ import {
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import strings, { loadLanguage } from "../../../Languages";
-
-type RootStackParamList = {
-  NotificationsScreen: undefined;
-  Login: undefined;
-  RepayLoan: undefined;
-};
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+import StatusBarComponent from "../../../components/StatusBarCompoent";
 
 const Navbar = require('../../../components/Navbar').default;
 const HamburgerMenu = require('../../../components/HamburgerMenu').default;
 
 export default function LoanScreen() {
-  const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation();
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
 
   const handleLogout = () => {
@@ -47,15 +39,15 @@ export default function LoanScreen() {
     );
   };
 const payments = [
-  { label: strings.NextPayment, value: "10 Oct 2025" },
-  { label: strings.DueAmount, value: "$2500" },
-  { label: strings.Status, value: strings.Paid }
+  { label: "Next Payment", value: "10 Oct 2025" },
+  { label: "Due Amount", value: "$250" },
+  { label: "Status", value: "Paid" }
 ];
 const payments2 = [
-  { label: strings.InterestRate, value: "8.5% p.a." },
-  { label: strings.MonthlyPayment, value: "NT $2,500" }
+  { label: "Interest Rate", value: "8.5% p.a." },
+   { label: "Monthly Payment", value: "NT $2,500" }
 ];
-  const handleCallPress = async (number: string) => {
+  const handleCallPress = async (number) => {
     const url = `tel:${number}`; // iOS/Android dono ke liye kaam karta hai
     try {
       const supported = await Linking.canOpenURL(url);
@@ -74,7 +66,9 @@ const payments2 = [
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+            <StatusBarComponent/>
+
+      <ScrollView style={{ flex: 1, backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
         {/* Top Header with buttons */}
         <View style={{
           flexDirection: 'row',
@@ -117,7 +111,7 @@ const payments2 = [
                 padding: 8,
                 marginRight: 16
               }}
-              onPress={() => handleCallPress("904834")}
+                       onPress={() => handleCallPress("904834")}
 
             >
               <Image
@@ -133,7 +127,7 @@ const payments2 = [
                 borderRadius: 12,
                 padding: 8
               }}
-              onPress={() => navigation.navigate('NotificationsScreen')}
+              onPress={() => navigation.navigate('Notifications')}
             >
               <Image
                 source={require('../../../assets/images/icons/notification.png')}
@@ -242,7 +236,7 @@ const payments2 = [
 					marginTop:15,
 				  }}>{strings.LoanInformation}</Text>
 			<View>
-  {payments2.map((item, index) => (
+  {payments.map((item, index) => (
     <View
       key={index}
       style={{

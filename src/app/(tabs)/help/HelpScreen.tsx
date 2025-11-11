@@ -17,6 +17,7 @@ import Navbar from '../../../components/Navbar';
 import HamburgerMenu from '../../../components/HamburgerMenu';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import strings from '../../../Languages';
+import StatusBarComponent from '../../../components/StatusBarComponent';
 
 export default function HelpScreen() {
   const navigation = useNavigation();
@@ -24,16 +25,7 @@ export default function HelpScreen() {
   const [message, setMessage] = useState('');
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
 
-  const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Logout', style: 'destructive', onPress: () => navigation.replace('Login') }
-      ]
-    );
-  };
+  
 
   const openURL = async (url) => {
     try {
@@ -64,6 +56,8 @@ export default function HelpScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+            <StatusBarComponent/>
+
       <ScrollView  
         showsVerticalScrollIndicator={false} 
         style={styles.scrollView}
@@ -110,7 +104,7 @@ export default function HelpScreen() {
 						padding: 8,
 						marginRight: 16
 					  }}
-					                         onPress={() => handleCallPress("904834")}
+				 onPress={() => handleCallPress("904834")}
 
 					>
 					  <Image

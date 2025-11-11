@@ -1,306 +1,326 @@
-import React, { useState } from 'react';
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  TextInput,
-  StyleSheet,
-} from 'react-native';
- import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton';
-import strings from '../../Languages';
+  import React, { useState } from 'react';
+  import {
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    Text,
+    TouchableOpacity,
+    View,
+    Image,
+    TextInput,
+    StyleSheet,
+  } from 'react-native';
+  import { StackNavigationProp } from '@react-navigation/stack';
+  import { RouteProp, useNavigation } from '@react-navigation/native';
+  import CustomInput from '../../components/CustomInput';
+  import CustomButton from '../../components/CustomButton';
+  import strings from '../../Languages';
+import { LoginApi } from '../api/apiRequest';
+import { errorToast, successToast } from '../api/customToast';
+import LoadingModal from '../../components/LoadingModal';
+import { useDispatch, useSelector } from 'react-redux';
 
-// For development only - OTP storage
-export const otpStore = new Map();
+  // For development only - OTP storage
+  export const otpStore = new Map();
 
-type RootStackParamList = {
-  Login: undefined;
-  Tabs: undefined;
-  OTP: { identifier: string; isPhone: string };
-  ForgotPassword: undefined;
-  Register: undefined;
-};
+  type RootStackParamList = {
+    Login: undefined;
+    Tabs: undefined;
+    OTP: { identifier: string; isPhone: string };
+    ForgotPassword: undefined;
+    Register: undefined;
+  };
 
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
+  type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+  type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 
-type Props = {
-  navigation: LoginScreenNavigationProp;
-  route: LoginScreenRouteProp;
-};
+  type Props = {
+    navigation: LoginScreenNavigationProp;
+    route: LoginScreenRouteProp;
+  };
 
-const LoginScreen: React.FC<Props> = () => {
-  const navigation = useNavigation()
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const LoginScreen: React.FC<Props> = () => {
+    const navigation = useNavigation()
+    // const [email, setEmail] = useState('');
+    // const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('aman@gmail.com');
+    const [password, setPassword] = useState('Aman@12345');
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
+const dispatch = useDispatch()
   const handleLogin = async () => {
+  // Reset previous errors
+  setEmailError('');
+  setPasswordError('');
 
-    // if (!email) {
-    //   Alert.alert(strings.Error, strings.PleaseEnterEmail);
-    //   return;
-    // }
+  // Input validation
+  if (!email) {
+    setEmailError(strings?.gmailError);
+    return;
+  }
 
-    // if (!password) {
-    //   Alert.alert(strings.Error, strings.PleaseEnterPassword);
-    //   return;
-    // }
+  if (!password) {
+    setPasswordError(strings?.passwordError);
+    return;
+  }
 
-    navigation.navigate('TabLayout', { identifier: email, isPhone: 'false' });
+  try {
+    // Start loader
+    setLoading(true);
 
-    // try {
-    //   setLoading(true);
+    // Prepare params
+    const params = {
+      email: email,
+      password: password,
+navigation:navigation,
+dispatch:dispatch
+    };
+    const response = await LoginApi(params, setLoading);
+if(response){
 
-    //   if (email === 'test@example.com' && password === 'password') {
-    //     navigation.replace('Tabs');
-    //     setLoading(false);
-    //     return;
-    //   }
+}
+ 
+  } catch (error) {
+     errorToast('Something went wrong. Please try again.');
+  } finally {
+    // Stop loader
+    setLoading(false);
+  }
+};
 
-    //   const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
-    //   otpStore.set(email, {
-    //     otp,
-    //     createdAt: new Date(),
-    //     attempts: 0,
-    //   });
 
-    //   console.log(`OTP for ${email}: ${otp}`);
-    //   Alert.alert('Development Mode', `Your OTP is: ${otp}`);
 
-    //   navigation.push('OTP', { identifier: email, isPhone: 'false' });
-    //   setLoading(false);
-    // } catch (error) {
-    //   Alert.alert('Login Failed', 'Failed to login. Please try again.');
-    //   setLoading(false);
-    // }
-  };
 
-  const handleGoogleSignIn = async () => {
-    Alert.alert('Google Sign-In', 'Development placeholder', [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Sign In',
-        onPress: () => {
-          setLoading(true);
-          setTimeout(() => {
-            setLoading(false);
-            navigation.replace('Tabs');
-          }, 1500);
+
+    const handleGoogleSignIn = async () => {
+      Alert.alert('Google Sign-In', 'Development placeholder', [
+        {
+          text: 'Cancel',
+          style: 'cancel',
         },
-      },
-    ]);
-  };
-
-  const handleAppleSignIn = async () => {
-    Alert.alert('Apple Sign-In', 'Development placeholder', [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Sign In',
-        onPress: () => {
-          setLoading(true);
-          setTimeout(() => {
-            setLoading(false);
-            navigation.replace('Tabs');
-          }, 1500);
+        {
+          text: 'Sign In',
+          onPress: () => {
+            setLoading(true);
+            setTimeout(() => {
+              setLoading(false);
+              navigation.replace('Tabs');
+            }, 1500);
+          },
         },
-      },
-    ]);
-  };
+      ]);
+    };
 
-  const toggleShowPassword = () => setShowPassword(!showPassword);
+    const handleAppleSignIn = async () => {
+      Alert.alert('Apple Sign-In', 'Development placeholder', [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Sign In',
+          onPress: () => {
+            setLoading(true);
+            setTimeout(() => {
+              setLoading(false);
+              navigation.replace('Tabs');
+            }, 1500);
+          },
+        },
+      ]);
+    };
 
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <StatusBar barStyle="dark-content" />
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <View style={{ flex: 1 }}>
-            {/* Background Image */}
-            <View style={{ height: 288, position: 'relative' }}>
-              <Image
-                source={require('../../assets/images/auth/bg.png')}
-                style={{ width: '100%', height: '100%' }}
-                resizeMode="cover"
-              />
-              <View style={{  backgroundColor: 'rgba(0,0,0,0.2)' }} />
+    const toggleShowPassword = () => setShowPassword(!showPassword);
+
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <StatusBar barStyle="dark-content" />
+                    <LoadingModal visible={loading}/>
+
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+            <View style={{ flex: 1 }}>
+              {/* Background Image */}
+              <View style={{ height: 288, position: 'relative' }}>
+                <Image
+                  source={require('../../assets/images/auth/bg.png')}
+                  style={{ width: '100%', height: '100%' }}
+                  resizeMode="cover"
+                />
+                <View style={{  backgroundColor: 'rgba(0,0,0,0.2)' }} />
+                <View
+                  style={{
+                    position: 'absolute',
+                    bottom: 32,
+                    left: 24,
+                    right: 24,
+                  }}
+                >
+                  <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#fff', marginBottom: 8 }}> 
+                    {strings?.Welcomeback}
+                  </Text>
+                  <Text style={{ fontSize: 16, color: 'rgba(255,255,255,0.8)' }}>
+                    輸入您的電子郵件與密碼以登入
+                  </Text>
+                </View>
+              </View>
+
+              {/* Form */}
               <View
                 style={{
-                  position: 'absolute',
-                  bottom: 32,
-                  left: 24,
-                  right: 24,
+                  flex: 1,
+                  backgroundColor: '#fff',
+                  borderTopLeftRadius: 24,
+                  borderTopRightRadius: 24,
+                  marginTop: -24,
+                  paddingHorizontal: 24,
+                  paddingVertical: 32,
+                  zIndex: 10,
                 }}
               >
-                <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#fff', marginBottom: 8 }}>
-                  {strings.WelcomeBack}
+                <Text style={{ fontSize: 16, fontWeight: '500', color: '#4B5563', marginBottom: 8 }}>
+                  電子郵件
                 </Text>
-                <Text style={{ fontSize: 16, color: 'rgba(255,255,255,0.8)' }}>
-                  {strings.LoginSubtitle}
+          <CustomInput
+                placeholder={strings?.EnteryourEmail}
+                value={email}
+          onChangeText={setEmail}
+                
+                />
+                {emailError ? <Text style={{marginTop:10,marginBottom:10, color: 'red' }}>{emailError}</Text> : null}
+
+                <Text style={{  fontSize: 16, fontWeight: '500', color: '#4B5563',marginTop:11, marginBottom: 8 }}>
+               {strings?.password}   
                 </Text>
+                  <CustomInput
+                placeholder={strings?.Password}
+                secureTextEntryToggle
+                  value={password}
+                  onChangeText={setPassword}
+              
+              
+            
+                />
+                {passwordError ? <Text style={{ marginTop:10,marginBottom:10, color: 'red' }}>{passwordError}</Text> : null}
+
+                
+                <TouchableOpacity
+                  style={{ alignSelf: 'flex-end', marginBottom: 20 }}
+                  onPress={() => navigation.push('ForgotPassword')}
+                >
+                  <Text style={{ color: '#2563EB', marginTop:15 ,fontSize: 14, fontWeight: '500' }}>{strings?.forgotpassword}</Text>
+                </TouchableOpacity>
+  {/* 
+                <Button
+                  mode="contained"
+                  onPress={handleLogin}
+                  style={{ marginTop: 8, borderRadius: 12, height: 56, backgroundColor: '#1E40AF' }}
+                  contentStyle={{ height: 56 }}
+                  loading={loading}
+                  disabled={loading}
+                  labelStyle={{ fontSize: 16, fontWeight: '600', color: '#fff' }}
+                >
+                  登入
+                </Button> */}
+  <CustomButton title={strings?.LogIn}   
+     onPress={handleLogin}
+   />
+                {/* Divider */}
+                <View style={{  flexDirection: 'row', alignItems: 'center', marginVertical: 24 }}>
+                  <View style={{ flex: 1, height: 1, backgroundColor: '#E5E7EB' }} />
+                  <Text style={{ marginHorizontal: 16, color: '#6B7280', fontSize: 12 }}>
+                    或選擇其他登入方式
+                  </Text>
+                  <View style={{ flex: 1, height: 1, backgroundColor: '#E5E7EB' }} />
+                </View>
+
+                {/* Social Login */}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 }}>
+                  <TouchableOpacity
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: 56,
+                      borderRadius: 12,
+                      borderWidth: 1,
+                      borderColor: '#E5E7EB',
+                      backgroundColor: '#fff',
+                      marginHorizontal: 4,
+                    }}
+                    // onPress={handleGoogleSignIn}
+                  >
+                    <Image
+                      source={require('../../assets/images/google.png')}
+                      style={{ width: 24, height: 24, marginRight: 12 }}
+                      resizeMode="contain"
+                    />
+                    <Text style={{ color: '#4B5563', fontSize: 14, fontWeight: '500' }}>谷歌</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: 56,
+                      borderRadius: 12,
+                      borderWidth: 1,
+                      borderColor: '#E5E7EB',
+                      backgroundColor: '#fff',
+                      marginHorizontal: 4,
+                    }}
+                    onPress={handleAppleSignIn}
+                  >
+                    <Image
+                      source={require('../../assets/images/apple.png')}
+                      style={{ width: 24, height: 24, marginRight: 12 }}
+                      resizeMode="contain"
+                    />
+                    <Text style={{ color: '#4B5563', fontSize: 14, fontWeight: '500' }}>苹果</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Footer */}
+                <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 24 }}>
+                  <Text style={{ color: '#6B7280', fontSize: 14 }}>還沒有帳號嗎? </Text>
+                  <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                    <Text style={{ color: '#1E40AF', fontSize: 14, fontWeight: '600' }}>{strings?.register}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  };
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: '#F8F8F8', // optional
+    },
+    input: {
+      height: 56,
+      paddingHorizontal: 12,
+      marginBottom: 16,
+      borderWidth: 1,
+      borderColor: '#E5E5E5',
+      borderRadius: 8,
+      backgroundColor: '#fff',
+    },
+  });
 
-            {/* Form */}
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: '#fff',
-                borderTopLeftRadius: 24,
-                borderTopRightRadius: 24,
-                marginTop: -24,
-                paddingHorizontal: 24,
-                paddingVertical: 32,
-                zIndex: 10,
-              }}
-            >
-              <Text style={{ fontSize: 16, fontWeight: '500', color: '#4B5563', marginBottom: 8 }}>
-                {strings.Email}
-              </Text>
-         <CustomInput
-              placeholder={strings?.EnteryourEmail}
-               value={email}
-        onChangeText={setEmail}
-              
-              />
-              <Text style={{ marginTop:11, fontSize: 16, fontWeight: '500', color: '#4B5563', marginBottom: 8 }}>
-                {strings.PasswordLabel}
-              </Text>
-                <CustomInput
-              placeholder={strings?.Password}
-              secureTextEntryToggle
-                 value={password}
-                onChangeText={setPassword}
-             
-             
-           
-              />
-              
-              <TouchableOpacity
-                style={{ alignSelf: 'flex-end', marginBottom: 20 }}
-                onPress={() => navigation.push('ForgotPassword')}
-              >
-                <Text style={{ color: '#2563EB', marginTop:15 ,fontSize: 14, fontWeight: '500' }}>{strings.ForgotPassword}</Text>
-              </TouchableOpacity>
-{/* 
-              <Button
-                mode="contained"
-                onPress={handleLogin}
-                style={{ marginTop: 8, borderRadius: 12, height: 56, backgroundColor: '#1E40AF' }}
-                contentStyle={{ height: 56 }}
-                loading={loading}
-                disabled={loading}
-                labelStyle={{ fontSize: 16, fontWeight: '600', color: '#fff' }}
-              >
-                登入
-              </Button> */}
-<CustomButton title={strings?.LogIn}    onPress={handleLogin}/>
-              {/* Divider */}
-              <View style={{  flexDirection: 'row', alignItems: 'center', marginVertical: 24 }}>
-                <View style={{ flex: 1, height: 1, backgroundColor: '#E5E7EB' }} />
-                <Text style={{ marginHorizontal: 16, color: '#6B7280', fontSize: 12 }}>
-                  {strings.OtherSignIn}
-                </Text>
-                <View style={{ flex: 1, height: 1, backgroundColor: '#E5E7EB' }} />
-              </View>
-
-              {/* Social Login */}
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 }}>
-                <TouchableOpacity
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: 56,
-                    borderRadius: 12,
-                    borderWidth: 1,
-                    borderColor: '#E5E7EB',
-                    backgroundColor: '#fff',
-                    marginHorizontal: 4,
-                  }}
-                  onPress={handleGoogleSignIn}
-                >
-                  <Image
-                    source={require('../../assets/images/google.png')}
-                    style={{ width: 24, height: 24, marginRight: 12 }}
-                    resizeMode="contain"
-                  />
-                  <Text style={{ color: '#4B5563', fontSize: 14, fontWeight: '500' }}>{strings.Google}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: 56,
-                    borderRadius: 12,
-                    borderWidth: 1,
-                    borderColor: '#E5E7EB',
-                    backgroundColor: '#fff',
-                    marginHorizontal: 4,
-                  }}
-                  onPress={handleAppleSignIn}
-                >
-                  <Image
-                    source={require('../../assets/images/apple.png')}
-                    style={{ width: 24, height: 24, marginRight: 12 }}
-                    resizeMode="contain"
-                  />
-                  <Text style={{ color: '#4B5563', fontSize: 14, fontWeight: '500' }}>{strings.Apple}</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Footer */}
-              <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 24 }}>
-                <Text style={{ color: '#6B7280', fontSize: 14 }}>{strings.NoAccount} </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                  <Text style={{ color: '#1E40AF', fontSize: 14, fontWeight: '600' }}>{strings.SignUp}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-};
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#F8F8F8', // optional
-  },
-  input: {
-    height: 56,
-    paddingHorizontal: 12,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-    borderRadius: 8,
-    backgroundColor: '#fff',
-  },
-});
-
-export default LoginScreen;
+  export default LoginScreen;

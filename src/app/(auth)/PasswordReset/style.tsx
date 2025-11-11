@@ -36,12 +36,12 @@ export const styles = StyleSheet.create({
     },
  container: {
     flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor:"#fff"
+     backgroundColor:"#fff"
   },
 
   scrollContainer: {
     flexGrow: 1,
+    marginHorizontal:15
   },
 
   backButton: {

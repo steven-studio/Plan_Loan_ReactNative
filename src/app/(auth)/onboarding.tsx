@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import strings from '../../Languages';
 
 interface OnboardingSlide {
   id: number;
@@ -77,7 +78,7 @@ export default function OnboardingScreen() {
         {/* Skip Button */}
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingTop: 48, paddingHorizontal: 24, zIndex: 10 }}>
           <TouchableOpacity onPress={handleSkip}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>Skip</Text>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{strings?.skip}</Text>
           </TouchableOpacity>
         </View>
 
@@ -129,7 +130,7 @@ export default function OnboardingScreen() {
 
         <TouchableOpacity onPress={handleNext} style={{ backgroundColor: '#1e40af', borderRadius: 12, paddingVertical: 16, alignItems: 'center' }}>
           <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>
-            {currentSlide === slides.length - 1 ? 'Get Started' : 'Next'}
+            {currentSlide === slides.length - 1 ?  strings?.getStarted :  strings.next}
           </Text>
         </TouchableOpacity>
       </View>

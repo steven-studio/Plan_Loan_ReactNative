@@ -3,6 +3,7 @@ import { Image,      ScrollView, Text, TouchableOpacity, View } from 'react-nati
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import strings from '../../../Languages';
+import StatusBarComponent from '../../../components/StatusBarComponent';
 
 export default function HowToUseScreen() {
   const navigation = useNavigation();
@@ -13,6 +14,8 @@ export default function HowToUseScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+            <StatusBarComponent/>
+
       <ScrollView  showsVerticalScrollIndicator={false} style={{ flex: 1, backgroundColor: 'white' }}>
         {/* Header */}
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 10, paddingBottom: 24, marginBottom: 32 }}>
@@ -33,17 +36,17 @@ export default function HowToUseScreen() {
           {/* Introduction */}
           <View style={{ marginBottom: 32 }}>
             <Text style={{ color: '#374151', fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>
-              Welcome to Loan Risk
+             {strings?.welcomehow} Risk
             </Text>
             <Text style={{ color: '#4B5563', fontSize: 16, lineHeight: 24 }}>
-              This guide will help you navigate through our app and make the most of our loan risk assessment features.
+              {strings?.depLoan}
             </Text>
           </View>
 
           {/* Steps */}
           <View style={{ marginBottom: 32 }}>
             <Text style={{ color: '#374151', fontSize: 20, fontWeight: 'bold', marginBottom: 24 }}>
-              Getting Started
+             {strings?.gettingStarted}
             </Text>
 
             {/* Step 1 */}
@@ -53,15 +56,15 @@ export default function HowToUseScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: '#374151', fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-                  Create Your Profile
+                 {strings?.createProfile}
                 </Text>
                 <Text style={{ color: '#4B5563', fontSize: 14, lineHeight: 20, marginBottom: 8 }}>
-                  Start by setting up your profile with accurate personal and financial information. This helps us provide better loan assessments.
-                </Text>
+                  {strings?.startby}
+                 </Text>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Profile')} // replace with your screen name
+                  onPress={() => navigation.navigate('EditProfileScreen')} // replace with your screen name
                   style={{ backgroundColor: '#DBEAFE', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 12, alignSelf: 'flex-start' }}>
-                  <Text style={{ color: '#2563EB', fontSize: 12, fontWeight: 'bold' }}>Go to Profile</Text>
+                  <Text style={{ color: '#2563EB', fontSize: 12, fontWeight: 'bold' }}>{strings?.goto}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -73,15 +76,15 @@ export default function HowToUseScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: '#374151', fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-                  Explore Loan Options
+                 {strings?.exploreLoan}
                 </Text>
                 <Text style={{ color: '#4B5563', fontSize: 14, lineHeight: 20, marginBottom: 8 }}>
-                  Browse different loan types and use our calculator to estimate monthly payments and interest rates.
-                </Text>
+                {strings?.exploreLoandep}
+                 </Text>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Loan')}
+                  // onPress={() => navigation.navigate('Loan')}
                   style={{ backgroundColor: '#DCFCE7', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 12, alignSelf: 'flex-start' }}>
-                  <Text style={{ color: '#16A34A', fontSize: 12, fontWeight: 'bold' }}>View Loans</Text>
+                  <Text style={{ color: '#16A34A', fontSize: 12, fontWeight: 'bold' }}>{strings?.viewLoans}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -93,15 +96,15 @@ export default function HowToUseScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: '#374151', fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-                  Apply for a Loan
+                  {strings?.ApplyforLoa}
                 </Text>
                 <Text style={{ color: '#4B5563', fontSize: 14, lineHeight: 20, marginBottom: 8 }}>
-                  Fill out the loan application form with your desired amount and repayment terms. Our AI will assess your risk profile.
-                </Text>
+                  {strings?.appyLoanDep}
+                 </Text>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('LoanApply')}
+                  onPress={() => navigation.navigate('ApplyLoanScreen')}
                   style={{ backgroundColor: '#EDE9FE', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 12, alignSelf: 'flex-start' }}>
-                  <Text style={{ color: '#7C3AED', fontSize: 12, fontWeight: 'bold' }}>Apply Now</Text>
+                  <Text style={{ color: '#7C3AED', fontSize: 12, fontWeight: 'bold' }}>{strings.applyNow}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -113,15 +116,15 @@ export default function HowToUseScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: '#374151', fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-                  Track Your Application
+                 {strings?.trackYour}
                 </Text>
                 <Text style={{ color: '#4B5563', fontSize: 14, lineHeight: 20, marginBottom: 8 }}>
-                  Monitor your application status and receive notifications about updates and decisions.
+                  {strings?.trackdep}
                 </Text>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('Notifications')}
                   style={{ backgroundColor: '#FFEDD5', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 12, alignSelf: 'flex-start' }}>
-                  <Text style={{ color: '#F97316', fontSize: 12, fontWeight: 'bold' }}>View Notifications</Text>
+                  <Text style={{ color: '#F97316', fontSize: 12, fontWeight: 'bold' }}>{strings?.viewNot}</Text>
                 </TouchableOpacity>
               </View>
             </View>

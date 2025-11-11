@@ -9,6 +9,7 @@ import {
   View 
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import StatusBarComponent from '../../../components/StatusBarComponent';
 
 export default function PrivacyPolicyScreen() {
   const navigation = useNavigation();
@@ -19,6 +20,8 @@ export default function PrivacyPolicyScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+                  <StatusBarComponent/>
+
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>

@@ -276,8 +276,8 @@ import Slider from "@react-native-community/slider"; // ✅ custom slider
 import { useNavigation } from "@react-navigation/native";
 import strings from "../../../Languages";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "react-native";
-
+import StatusBarComponent from "../../../components/StatusBarCompoent";
+ 
 export default function ApplyLoan() {
   const [loanAmount, setLoanAmount] = useState("");
   const [sliderValue, setSliderValue] = useState(50000);
@@ -289,7 +289,8 @@ const navagtion = useNavigation()
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */} 
-            <StatusBar barStyle="dark-content" />
+              <StatusBarComponent/>
+
       
       <View style={{
         marginHorizontal:15

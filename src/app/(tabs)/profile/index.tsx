@@ -10,6 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import strings from '../../../Languages';
+import StatusBarComponent from '../../../components/StatusBarCompoent';
  
 export default function ProfileScreen() {
   const navigation = useNavigation();
@@ -31,6 +32,8 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <StatusBarComponent/>
+
       <ScrollView 
 	  
 	 showsVerticalScrollIndicator={false}

@@ -4,7 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import strings, { loadLanguage, changeAppLanguage } from '../Languages';
 import DeleteAccountModal from './DeleteAccountModal';
 import { Alert } from 'react-native';
+import { logout } from '../redux/feature/authSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useDispatch, useSelector } from 'react-redux';
 interface HamburgerMenuProps {
   visible: boolean;
   onClose: () => void;
@@ -61,24 +64,26 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
     onClose();
     navigation.navigate(route);
   };
-
+  const userData: any = useSelector((state: any) => state.auth.userData);
+   const dispatch = useDispatch()
   // Logout handlers
   const handleLogoutPress = () => setShowLogoutModal(true);
-  const handleLogoutConfirm = () => {
+  const handleLogoutConfirm = async () => {
     setShowLogoutModal(false);
     onClose();
-    console.log('Logout confirmed');
-    navigation.navigate('Login');
+     dispatch(logout());
+    await AsyncStorage.removeItem('authData');
+    navigation.replace('Login');
   };
   const handleLogoutCancel = () => setShowLogoutModal(false);
 
   // Language handlers
   const handleLanguagePress = () => setShowLanguageModal(true);
-  
-  const handleLanguageSelect = async (lang: 'en' | 'zh-Hans' | 'zh-Hant') => {
+
+  const handleLanguageSelect = async (lang: 'en' | 'zh') => {
     await changeAppLanguage(lang);
     setShowLanguageModal(false);
- 
+
   };
 
   if (!isReady) {
@@ -100,9 +105,9 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
       >
         <View style={{ flex: 1, flexDirection: 'row' }}>
           {/* Menu Content */}
-          <View style={{ 
-            width: '85%', 
-            backgroundColor: '#FFFFFF', 
+          <View style={{
+            width: '85%',
+            backgroundColor: '#FFFFFF',
             shadowColor: '#000',
             shadowOffset: {
               width: 2,
@@ -114,19 +119,19 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
             borderTopRightRadius: 2,
             borderBottomRightRadius: 2
           }}>
-            <ScrollView 
-              contentContainerStyle={{ 
+            <ScrollView
+              contentContainerStyle={{
                 paddingTop: 60,
-                paddingBottom: 30 
+                paddingBottom: 30
               }}
               showsVerticalScrollIndicator={false}
             >
-              
+
               {/* Profile Section */}
-              <View style={{ 
-                flexDirection: 'row', 
-                alignItems: 'center', 
-                paddingHorizontal: 20, 
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 20,
                 paddingVertical: 16,
                 marginBottom: 20,
                 borderBottomWidth: 1,
@@ -136,31 +141,31 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
                   width: 45,
                   height: 45,
                   borderRadius: 35,
-                   justifyContent: 'center',
+                  justifyContent: 'center',
                   alignItems: 'center',
                   marginRight: 15,
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.1,
                   shadowRadius: 4,
-                 }}> 
-                  <Image  
-                  style={{
-                     width: 70,
-                  height: 70,
-                  borderRadius: 35,
-                   justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: 15,
-         
-                  }}
-                  source={{uri:"https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA4L2pvYjEwMzQtZWxlbWVudC0wNy00MDMucG5n.png"}}/>
-                 </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 18, fontWeight: '700', color: '#1F2937', marginBottom: 6 }}>John Smith</Text>
-                  <Text style={{ fontSize: 14, color: '#6B7280' }}>johnsmith@example.com</Text>
+                }}>
+                  <Image
+                    style={{
+                      width: 70,
+                      height: 70,
+                      borderRadius: 35,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginRight: 15,
+
+                    }}
+                    source={{ uri: "https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA4L2pvYjEwMzQtZWxlbWVudC0wNy00MDMucG5n.png" }} />
                 </View>
-                <TouchableOpacity 
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 18, fontWeight: '700', color: '#1F2937', marginBottom: 6 }}>{userData?.fullName}</Text>
+                  <Text style={{ fontSize: 14, color: '#6B7280' }}>{userData?.email}</Text>
+                </View>
+                <TouchableOpacity
                   onPress={onClose}
                   style={{
                     width: 50,
@@ -175,118 +180,120 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
                 </TouchableOpacity>
               </View>
 
-              {/* Menu Items */}
               <View style={{ paddingHorizontal: 10 }}>
                 {[
                   { key: 'home', label: strings.home, icon: '🏠' },
                   { key: 'HelpFeedback', label: strings.helpFeedback, icon: '❓' },
+                  { key: 'FAQScreen', label: strings.faq, icon: '❓' },
+
                   { key: 'LegalPoliciesScreen', label: strings.terms, icon: '📄' },
-                  { key: 'HowToUseScreen', label: strings.howToUse, icon: '🎯' ,
-                    
-                   },
-                  
-                  { key: 'PrivacyPolicyScreen', label: strings.PrivacyPolicy, icon: '🎯' ,
-                    
-                   },
-                    { key: 'ChangePasswordScreen', label: strings.ChangePasswordScreen, icon: '🎯' ,
-                    
-                   },
+                  { key: 'HowToUseScreen', label: strings.howToUse, icon: '🎯', },
+
+                  // {
+                  //   key: 'PrivacyPolicyScreen', label: strings.PrivacyPolicy, icon: '🎯',
+
+                  // },
+                  {
+                    key: 'ChangePasswordScreen', label: strings.ChangePasswordScreen, icon: '🎯',
+
+                  },
+
                   { key: 'language', label: strings.changeLanguage, icon: '🌐', action: handleLanguagePress }
                 ].map((item, index) => (
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     key={item.key}
-                    style={{ 
+                    style={{
                       flexDirection: 'row',
-  alignItems: 'center',
-  paddingVertical: 15,
-  paddingHorizontal: 12,
-   borderRadius: 12,
-  backgroundColor: "white",
-  borderBottomWidth:0.8,
- 
- 
-                     }}
+                      alignItems: 'center',
+                      paddingVertical: 15,
+                      paddingHorizontal: 12,
+                      borderRadius: 12,
+                      backgroundColor: "white",
+                      borderBottomWidth: 0.8,
+
+
+                    }}
                     onPress={item.action || (() => handleNavigation(item.key))}
                   >
-                     <Text style={{ 
-                      fontSize: 16, 
-                      fontWeight:  '500', 
-                      color:   '#374151' 
+                    <Text style={{
+                      fontSize: 16,
+                      fontWeight: '500',
+                      color: '#374151'
                     }}>
                       {item.label}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </View>
-              
-<TouchableOpacity
- onPress={() => setModalVisible(true)}                style={{ 
-                  flexDirection: 'row',
-  alignItems: 'center',
-    borderRadius: 12,
-  backgroundColor: "white",
-  // Android shadow
-   // iOS shadow
- 
-     paddingVertical: 15,
-  paddingHorizontal: 17,
-               
-                }}
-              >
-                 <Text style={{ color: '#DC2626', fontSize: 17, fontWeight: '600' }}>{strings.DeleteAccount}</Text>
-              </TouchableOpacity> 
-              {/* Logout Button */}
-            
-              {/* App Version */}
-            
-            </ScrollView>
+
               <TouchableOpacity
-                onPress={handleLogoutPress}
-                style={{ 
-                  flexDirection: 'row', 
-                  alignItems: 'center', 
-                  borderRadius: 12, 
-                   marginHorizontal: 15,  
-                  marginBottom:20,
-                       paddingVertical: 15,
-  paddingHorizontal: 16,
-               
+                onPress={() => setModalVisible(true)} style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  borderRadius: 12,
+                  backgroundColor: "white",
+                  // Android shadow
+                  // iOS shadow
+
+                  paddingVertical: 15,
+                  paddingHorizontal: 17,
+
                 }}
               >
-                 <Text style={{ color: '#DC2626', fontSize: 17, fontWeight: '600' }}>{strings.logout}</Text>
+                <Text style={{ color: '#DC2626', fontSize: 17, fontWeight: '600' }}>{strings.DeleteAccount}</Text>
               </TouchableOpacity>
+              {/* Logout Button */}
+
+              {/* App Version */}
+
+            </ScrollView>
+            <TouchableOpacity
+              onPress={handleLogoutPress}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderRadius: 12,
+                marginHorizontal: 15,
+                marginBottom: 20,
+                paddingVertical: 15,
+                paddingHorizontal: 16,
+
+              }}
+            >
+              <Text style={{ color: '#DC2626', fontSize: 17, fontWeight: '600' }}>{strings.logout}</Text>
+            </TouchableOpacity>
 
           </View>
 
           {/* Overlay */}
-          <TouchableOpacity 
-            style={{ flex: 1 }} 
+          <TouchableOpacity
+            style={{ flex: 1 }}
             onPress={onClose}
             activeOpacity={1}
           />
-           <DeleteAccountModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onConfirm={handleDelete}
-        requireReason={true}
-        title= {strings?.DeleteAccount}
-        message= {strings?.deleteText}
-      />
+          <DeleteAccountModal
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onConfirm={handleDelete}
+            requireReason={true}
+            title={strings?.DeleteAccount}
+            message={strings?.deleteText}
+          />
         </View>
       </Modal>
 
       {/* Logout Confirmation Modal */}
       <Modal visible={showLogoutModal} transparent animationType="fade" onRequestClose={handleLogoutCancel}>
-        <View style={{ 
-          flex: 1, 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          backgroundColor: 'rgba(0,0,0,0.6)' 
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.6)'
         }}>
-          <View style={{ 
-            backgroundColor: 'white', 
-            borderRadius: 20, 
-            padding: 24, 
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 20,
+            padding: 24,
             width: 320,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 4 },
@@ -309,60 +316,60 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
               </View>
             </View>
 
-            <Text style={{ 
-              fontSize: 20, 
-              fontWeight: '700', 
-              color: '#1F2937', 
-              textAlign: 'center', 
-              marginBottom: 8 
+            <Text style={{
+              fontSize: 20,
+              fontWeight: '700',
+              color: '#1F2937',
+              textAlign: 'center',
+              marginBottom: 8
             }}>
               {strings.logoutConfirmTitle}
             </Text>
-            <Text style={{ 
-              fontSize: 15, 
-              color: '#6B7280', 
-              textAlign: 'center', 
+            <Text style={{
+              fontSize: 15,
+              color: '#6B7280',
+              textAlign: 'center',
               marginBottom: 24,
-              lineHeight: 20 
+              lineHeight: 20
             }}>
               {strings.logoutConfirmMessage}
             </Text>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={handleLogoutCancel}
                 style={{ flex: 1, marginRight: 8 }}
               >
-                <View style={{ 
-                  backgroundColor: '#F3F4F6', 
-                  paddingVertical: 14, 
-                  borderRadius: 12, 
-                  alignItems: 'center' 
+                <View style={{
+                  backgroundColor: '#F3F4F6',
+                  paddingVertical: 14,
+                  borderRadius: 12,
+                  alignItems: 'center'
                 }}>
-                  <Text style={{ 
-                    fontSize: 16, 
-                    fontWeight: '600', 
-                    color: '#374151' 
+                  <Text style={{
+                    fontSize: 16,
+                    fontWeight: '600',
+                    color: '#374151'
                   }}>
                     {strings.no}
                   </Text>
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={handleLogoutConfirm}
                 style={{ flex: 1, marginLeft: 8 }}
               >
-                <View style={{ 
-                  backgroundColor: '#DC2626', 
-                  paddingVertical: 14, 
-                  borderRadius: 12, 
-                  alignItems: 'center' 
+                <View style={{
+                  backgroundColor: '#DC2626',
+                  paddingVertical: 14,
+                  borderRadius: 12,
+                  alignItems: 'center'
                 }}>
-                  <Text style={{ 
-                    color: 'white', 
-                    fontSize: 16, 
-                    fontWeight: '600' 
+                  <Text style={{
+                    color: 'white',
+                    fontSize: 16,
+                    fontWeight: '600'
                   }}>
                     {strings.yes}
                   </Text>
@@ -375,16 +382,16 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
 
       {/* Language Selection Modal */}
       <Modal visible={showLanguageModal} transparent animationType="fade" onRequestClose={() => setShowLanguageModal(false)}>
-        <View style={{ 
-          flex: 1, 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          backgroundColor: 'rgba(0,0,0,0.6)' 
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.6)'
         }}>
-          <View style={{ 
-            backgroundColor: 'white', 
-            borderRadius: 20, 
-            padding: 24, 
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 20,
+            padding: 24,
             width: 320,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 4 },
@@ -392,32 +399,31 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
             shadowRadius: 12,
             elevation: 10
           }}>
-            <Text style={{ 
-              fontSize: 20, 
-              fontWeight: '700', 
-              color: '#1F2937', 
+            <Text style={{
+              fontSize: 20,
+              fontWeight: '700',
+              color: '#1F2937',
               marginBottom: 20,
               textAlign: 'center'
             }}>
-              {strings.selectLanguage}
+              {strings?.selectLanguage}
             </Text>
-
             {[
-              { lang: 'en',      label: strings.english,             flag: '🇺🇸' },
-              { lang: 'zh-Hans', label: strings.chineseSimplified,   flag: '🇨🇳' },
-              { lang: 'zh-Hant', label: strings.chineseTraditional,  flag: '🇹🇼' },
+              { lang: 'en', label: strings.english, flag: '🇺🇸' },
+              { lang: 'zh', label: strings.chinese, flag: '🇨🇳' },
+              { lang: 'tw', label: strings.taiwanese, flag: '🇹🇼' },
             ].map((language) => (
-              <TouchableOpacity 
+              <TouchableOpacity
                 key={language.lang}
-                onPress={() => handleLanguageSelect(language.lang as 'en' | 'zh-Hans' | 'zh-Hant')}
+                onPress={() => handleLanguageSelect(language.lang as 'en' | 'zh')}
                 style={{ marginBottom: 12 }}
               >
-                <View style={{ 
+                <View style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   paddingVertical: 16,
                   paddingHorizontal: 16,
-                  borderRadius: 12, 
+                  borderRadius: 12,
                   backgroundColor: '#F8F9FA',
                   borderWidth: 1,
                   borderColor: '#E5E7EB'
@@ -430,22 +436,22 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
               </TouchableOpacity>
             ))}
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setShowLanguageModal(false)}
               style={{ marginTop: 8 }}
             >
-              <View style={{ 
-                paddingVertical: 14, 
-                alignItems: 'center', 
-                borderRadius: 12, 
+              <View style={{
+                paddingVertical: 14,
+                alignItems: 'center',
+                borderRadius: 12,
                 backgroundColor: '#F3F4F6',
                 borderWidth: 1,
                 borderColor: '#E5E7EB'
               }}>
-                <Text style={{ 
-                  fontSize: 16, 
-                  fontWeight: '600', 
-                  color: '#374151' 
+                <Text style={{
+                  fontSize: 16,
+                  fontWeight: '600',
+                  color: '#374151'
                 }}>
                   {strings.close}
                 </Text>
@@ -454,7 +460,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible, onClose }) => {
           </View>
         </View>
       </Modal>
-      
+
     </>
   );
 };

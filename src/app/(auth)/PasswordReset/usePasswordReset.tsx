@@ -1,70 +1,79 @@
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
- 
+import strings from '../../../Languages';
+import { errorToast, successToast } from '../../api/customToast';
+import { base_url } from '../../api';
 
 export const usePasswordReset = () => {
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
- const [type, setType] = useState('');
-  useEffect(() => {
-    (async () => {
-      const userType = await AsyncStorage.getItem('selectedRole');
-
-      setType(userType);
-    })();
-  }, []);
-  const navigation = useNavigation();
-
+ 
+  // Fetch selected role from AsyncStorage
+ 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  const handleIdentityText = (value: string) => {
-    setEmail(value.trim());
+  // Validate email input
+  const handleIdentityText = (value) => {
+    const trimmed = value.trim();
+    setEmail(trimmed);
 
-    if (value.trim() === '') {
-      // setEmailError(localizationStrings.emailRequired);
-      return;
-    }
-
-    if (!emailRegex.test(value.trim())) {
-      // setEmailError(localizationStrings.emailError);
+    if (trimmed === '' || !emailRegex.test(trimmed)) {
+      setEmailError(strings?.gmailError || 'Please enter a valid email');
     } else {
       setEmailError('');
     }
   };
 
-  const passFunction = async () => {
-            //  navigation.navigate(ScreenNameEnum.OtpScreen)
-
+  // Forgot password API call
+  const callForgotPasswordAPI = async () => {
+    setLoading(true);
     try {
-      if (email.trim() === '') {
-        // setEmailError(localizationStrings.emailRequired);
-        return;
-      }
-
-      if (!emailRegex.test(email.trim())) {
-        // setEmailError(localizationStrings.emailError);
-      } else {
-        setEmailError('');
-
-
-        const params = {
+      const response = await fetch(`${base_url}user/forgot-password`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+         },
+        body: JSON.stringify({
           email: email,
-          type:type,
-          navigation,
-        };
+         }),
+      });
 
-        // console.log(params);
-        // await restEmailOtpScreen(params, setLoading);
-        //  navigation.navigate(ScreenNameEnum.OtpScreen)
-        // navigation.navigate(ScreenNameEnum.LoginScreen)
+      const parsedResponse = await response.json();
+ 
+      if (parsedResponse?.statusCode == 200 || parsedResponse?.statusCode == 201) {
+        successToast(parsedResponse.message || 'OTP sent successfully');
+        navigation.navigate('OTP', { email }); // Pass email to OTP screen
+      } else {
+        errorToast(parsedResponse.message || 'Something went wrong');
       }
-
     } catch (error) {
-      console.error('OTP error:', error);
+      console.log('Forgot Password API Error:', error);
+      errorToast('Network error. Please try again.');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // Validate and trigger API
+  const passFunction = async () => {
+    if (email.trim() === '') {
+      setEmailError(strings?.gmailError || 'Please enter your email');
+      return;
+    }
+
+    if (!emailRegex.test(email.trim())) {
+      setEmailError(strings?.gmailError || 'Please enter a valid email');
+      return;
+    }
+
+    setEmailError('');
+    await callForgotPasswordAPI();
   };
 
   return {
@@ -76,6 +85,6 @@ export const usePasswordReset = () => {
     loading,
     handleIdentityText,
     passFunction,
-    navigation
+    navigation,
   };
 };

@@ -89,14 +89,15 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   icon: {
-    width: 38,
-    height: 38,
+    width: 30,
+    height: 30,
     resizeMode:"cover"
   },
   txtHeading: {
-    fontSize: 18,
+    fontSize: 16,
      color: '#000',
-     fontWeight:"600"
+     fontWeight:"600" ,
+     
   },
 });
 

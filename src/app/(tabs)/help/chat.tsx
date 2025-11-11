@@ -11,6 +11,7 @@ import {
   StyleSheet
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import StatusBarComponent from '../../../components/StatusBarComponent';
 
 const Navbar = require('../../../components/Navbar').default;
 
@@ -37,7 +38,9 @@ export default function ChatScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scroll}>
+            <StatusBarComponent/>
+ 
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>

@@ -6495,6 +6495,11 @@ react-native-animatable@1.4.0:
   dependencies:
     prop-types "^15.8.1"
 
+react-native-call-log@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-call-log/-/react-native-call-log-2.1.2.tgz#f80d2fcb45f72118eb8048d5bfdef191fd4a3df3"
+  integrity sha512-nWHmb+QMN/AbbZFEuUGiQePssPgjQr5dibNAURDlqO4S5wuLk1XzxxsLUAVHZnB0FdJoMlajD7tUAXtaoxYwUQ==
+
 react-native-circular-progress@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/react-native-circular-progress/-/react-native-circular-progress-1.4.1.tgz#46d94e73e5973bb415937b912ba56ce1947f66b7"
@@ -6506,6 +6511,11 @@ react-native-confirmation-code-field@^8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/react-native-confirmation-code-field/-/react-native-confirmation-code-field-8.0.1.tgz#0c6b232497348d728c2f628e9833f7e6bfb8efd1"
   integrity sha512-pwrhQtspFEp0y/gxZRp8hrra+UjAYfwAsW5Sn3yYtdUZVyRjAZPBnUb3rOc+z5L5o2ml03z5P3uvTK0yQwXsmA==
+
+react-native-device-info@^14.1.1:
+  version "14.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-14.1.1.tgz#f50c03902f87e4a99b1c51ed85163b795f02b3ea"
+  integrity sha512-lXFpe6DJmzbQXNLWxlMHP2xuTU5gwrKAvI8dCAZuERhW9eOXSubOQIesk9lIBnsi9pI19GMrcpJEvs4ARPRYmw==
 
 react-native-element-dropdown@^2.12.4:
   version "2.12.4"

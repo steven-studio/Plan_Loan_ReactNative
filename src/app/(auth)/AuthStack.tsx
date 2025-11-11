@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './splash';
 import OnboardingScreen from './onboarding';
- import CreateProfileScreen from './create-profile';
+import CreateProfileScreen from './create-profile';
 import RegisterScreen from './register';
 import UploadCameraScreen from './upload-camera';
 import UploadGalleryScreen from './upload-gallery-new';
@@ -28,30 +28,23 @@ import { ActivityIndicator, View } from 'react-native';
 import PrivacyPolicyScreen from '../(tabs)/settings/PrivacyPolicyScreen';
 import RepayLoanScreen from '../(tabs)/loan/RepayLoanScreen';
 import ChatScreen from '../(tabs)/help/chat';
+import Toast from 'react-native-toast-message';
+import toastConfig from '../api/customToast';
+import { Provider } from 'react-redux';
+import { persistor, store } from '../../redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import FAQScreen from '../(tabs)/help/faq';
+import SinupOtp from './SinupOtp/SinupOtp';
  
-
+ 
 const Stack = createStackNavigator();
-
+ 
 export default function AuthStack() {
-  const [isReady, setIsReady] = useState(false);
-
-  // useEffect(() => {
-  //   const initLang = async () => {
-  //     await loadLanguage();
-  //     setIsReady(true);
-  //   };
-  //   initLang();
-  // }, []);
-
-  // if (!isReady) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-  //       <ActivityIndicator size="large" color="black" />
-  //     </View>
-  //   );
-  // }
-
+  
+ 
   return (
+      <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
     <NavigationContainer>
     <Stack.Navigator screenOptions={{ headerShown: false }}>
        <Stack.Screen name="Splash" component={SplashScreen} />
@@ -60,7 +53,7 @@ export default function AuthStack() {
      <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="ForgotPassword" component={PasswordReset} />  
- <Stack.Screen name="OTP" component={OtpScreen} />
+<Stack.Screen name="OTP" component={OtpScreen} />
   <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
   <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
     <Stack.Screen name="HowToUseScreen" component={HowToUseScreen} />
@@ -69,25 +62,16 @@ export default function AuthStack() {
     <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
     <Stack.Screen name="PrivacyPolicyScreen" component={PrivacyPolicyScreen} />
     <Stack.Screen name="RepayLoan" component={RepayLoanScreen} />
-
-
-
- 
+    <Stack.Screen name="FAQScreen" component={FAQScreen} />
   <Stack.Screen name="CreatePassword" component={CreatePassword} />  
   <Stack.Screen name="TabLayout" component={BottomTabs} />
+  <Stack.Screen name="SinupOtp" component={SinupOtp} />
   <Stack.Screen name="ApplyLoanScreen" component={ApplyLoan} />
-
- 
-      {/* <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} /> */}
-      {/* <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="CreateProfile" component={CreateProfileScreen} />
-      <Stack.Screen name="UploadCamera" component={UploadCameraScreen} />
-      <Stack.Screen name="UploadGallery" component={UploadGalleryScreen} />
-      <Stack.Screen name="OTP" component={OTPScreen} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} /> */}  
-      {/* <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} /> */}
+  
     </Stack.Navigator>
+     <Toast config={toastConfig} />
     </NavigationContainer>
+         </PersistGate>
+    </Provider>
   );
 }

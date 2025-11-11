@@ -9,6 +9,8 @@ import { usePasswordReset } from './usePasswordReset';
 import CustomInput from '../../../components/CustomInput';
 import CustomButton from '../../../components/CustomButton';
 import CustomHeader from '../../../components/CustomHeader';
+import strings from '../../../Languages';
+import LoadingModal from '../../../components/LoadingModal';
 export default function PasswordReset() {
   const {
     email,
@@ -25,20 +27,20 @@ export default function PasswordReset() {
          <StatusBar barStyle="dark-content" />
    
             <CustomHeader label="" />
-
+   <LoadingModal visible={loading}/>
        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         {/* <CustomBackHeader menuIcon={imageIndex.back} label={"Back"} /> */}
         <View style={styles.headerContainer}>
           <View style={styles.titleContainer}>
-            <Text allowFontScaling={false} style={styles.titleText}>Password Reset</Text>
-            <Text allowFontScaling={false} style={styles.descriptionText}>Please put your mobile number to reset your password</Text>
+            <Text allowFontScaling={false} style={styles.titleText}>{strings?.PasswordReset}</Text>
+            <Text allowFontScaling={false} style={styles.descriptionText}>{strings?.pleaseputgmail}</Text>
           </View>
         </View>
         <View style={{
-          marginTop: 28
+          marginTop: 14
         }}>
           <CustomInput
-            placeholder={"Email Address"}
+            placeholder={strings?.EnteryourEmail}
             // leftIcon={<Image source={imageIndex.Email}  style={{
             //   height:20,
             //   width:20,
@@ -55,11 +57,15 @@ export default function PasswordReset() {
       <Image   source ={(require("../../../assets/images/home/gmail.png"))} style={{ width: 327, top: 40, height: 280, alignSelf: 'center', marginTop: 30 }} /> */}
 
       </ScrollView>
-
-      <CustomButton title={"Send"}
-        // onPress={passFunction}
-        onPress={() => navigation.navigate("OTP")}         
-        style={{ marginBottom: 25 }} />
+<View style={{
+    marginHorizontal:15
+}}>
+      <CustomButton title={strings?.Send}
+        onPress={passFunction}
+        // onPress={() => navigation.navigate("OTP")}         
+        style={{ marginBottom: 25 ,  
+}} />
+</View>
     </SafeAreaView>
   );
 }

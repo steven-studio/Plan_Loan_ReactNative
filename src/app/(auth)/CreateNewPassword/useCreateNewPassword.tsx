@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-  
+import { base_url } from '../../api';
+import { errorToast, successToast } from '../../api/customToast';
+import strings from '../../../Languages';
+
 export const useCreateNewPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -9,47 +12,80 @@ export const useCreateNewPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
-  const route = useRoute();
-  // const { userId } = route?.params || {};
+  const route: any = useRoute();
+  const { user } = route?.params || {};
 
+ 
   const handlePassText = (text: string) => {
     setPassword(text);
+    if (!text || text.length < 6) {
+      setPasswordError(strings.pasCharacters ||"");
+    } else {
+      setPasswordError('');
+    }
 
-    // const error = validatePassword(text);
-    setPasswordError(error);
-
-    // const confirmError = validateConfirmPassword(text, confirmPassword);
-    // setConfirmPasswordError(confirmError);
+    if (confirmPassword && text !== confirmPassword) {
+      setConfirmPasswordError(strings?.passwordMatch ||"");
+    } else {
+      setConfirmPasswordError('');
+    }
   };
 
   const handleCPassText = (text: string) => {
     setConfirmPassword(text);
-
-    // const confirmError = validateConfirmPassword(password, text);
-    // setConfirmPasswordError(confirmError);
+    if (password && text !== password) {
+      setConfirmPasswordError(strings?.passwordMatch ||"");
+    } else {
+      setConfirmPasswordError('');
+    }
   };
 
   const handleSetPassword = async () => {
-    navigation.navigate("Login")
-    // const passErr = validatePassword(password);
-    // const confirmErr = validateConfirmPassword(password, confirmPassword);
+    if (!password) {
+      setPasswordError(strings?.passwordrequired ||"");
+      return;
+    }
+    if (!confirmPassword) {
+      setConfirmPasswordError(strings?.confirmrequired ||"");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setConfirmPasswordError(strings?.passwordMatch ||"");
+      return;
+    }
 
-    // setPasswordError(passErr);
-    // setConfirmPasswordError(confirmErr);
+    setIsLoading(true);
 
-    // if (passErr || confirmErr) return;
+    try {
+      const response = await fetch(`${base_url}user/reset-password`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user?.email,
+          password,
+          confirmPassword,
+          resetToken: user?.resetToken,
+        }),
+      });
 
-    // try {
-    //   const params = {
-    //     // userId,
-    //     navigation,
-    //     confirmPassword,
-    //   };
+      const parsedResponse = await response.json();
+      console.log("parsedResponse", parsedResponse);
 
-    //   // await updatePassword(params, setIsLoading);
-    // } catch (error) {
-    //   console.error('Set password error:', error);
-    // }
+      if (parsedResponse?.statusCode === 200 || parsedResponse?.statusCode === 201) {
+        successToast(parsedResponse.message || 'Password reset successfully');
+        navigation.navigate('Login'); // ✅ Navigate to Login screen
+      } else {
+        errorToast(parsedResponse.message || 'Failed to reset password');
+      }
+    } catch (error) {
+      console.error('❌ Reset password error:', error);
+      errorToast('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {
@@ -61,6 +97,6 @@ export const useCreateNewPassword = () => {
     handlePassText,
     handleCPassText,
     handleSetPassword,
-    navigation
+    navigation,
   };
 };

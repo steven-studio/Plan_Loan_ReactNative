@@ -26,7 +26,7 @@ import strings from '../../../Languages';
 import LoadingModal from '../../../components/LoadingModal';
  
 
-export default function OtpScreen() {
+export default function SinupOtp() {
   const {
     value,
     isLoading,

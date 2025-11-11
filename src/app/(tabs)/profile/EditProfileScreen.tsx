@@ -17,6 +17,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Dropdown } from 'react-native-element-dropdown';
 import PhotoPickerModal from '../../../components/PhotoPickerModal';
 import strings from '../../../Languages';
+import StatusBarComponent from '../../../components/StatusBarCompoent';
 
 const Navbar = require('../../../components/Navbar').default;
 
@@ -85,6 +86,8 @@ export default function EditProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+            <StatusBarComponent/>
+
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>

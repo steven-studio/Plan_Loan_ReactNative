@@ -13,20 +13,23 @@ import {
   StyleSheet
 } from 'react-native';
 import CustomInput from '../../components/CustomInput';
+import { RegisterApi } from '../api/apiRequest';
+import LoadingModal from '../../components/LoadingModal';
+import { useNavigation } from '@react-navigation/native';
 // import { Checkbox } from 'react-native-paper';
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
 
+const navigator = useNavigation()
   const handleRegister = async () => {
-    // Basic validation
-    if (!email || !password) {
+    if (!email || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill all required fields');
       return;
     }
@@ -35,34 +38,35 @@ const RegisterScreen = () => {
       Alert.alert('Error', 'Passwords do not match');
       return;
     }
-
-    if (!termsAccepted) {
-      Alert.alert('Error', 'Please accept the terms and conditions');
-      return;
-    }
-
+ 
     try {
-      setLoading(true);
+      const params = {
+        email,
+        password,
+        confirmPassword,
+        navigator,
+      };
 
-      // For development, simulate registration
-      console.log('Registration data:', { email, password });
+      const response = await RegisterApi(params, setLoading);
 
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      Alert.alert('Success', 'Account created successfully!', [
-        {
-          text: 'OK',
-          onPress: () => console.log('Navigate to create profile') // Replace with your navigation
-        }
-      ]);
-
-      setLoading(false);
+      if (response?.status == 1) {
+        Alert.alert('Success', 'Account created successfully!', [
+          {
+            text: 'OK',
+            onPress: () => {
+              console.log('Navigate to create profile');
+              // navigation.navigate(ScreenNameEnum.CreateProfile);
+            },
+          },
+        ]);
+      }
     } catch (error) {
+      console.log('Registration error:', error);
       Alert.alert('Registration Failed', 'Failed to register. Please try again.');
-      setLoading(false);
     }
   };
+
+
 
   // Handle Google Sign-In
   const handleGoogleSignIn = async () => {
@@ -145,6 +149,7 @@ const RegisterScreen = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
+      <LoadingModal visible={loading}/>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
@@ -171,8 +176,7 @@ const RegisterScreen = () => {
          
        <CustomInput
                 placeholder="Enter your email"
-              secureTextEntryToggle
-       
+        
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -180,10 +184,10 @@ const RegisterScreen = () => {
              
            
               />
-              <Text style={styles.label}>Phone</Text>
+              <Text style={styles.label}>Password</Text>
             
                  <CustomInput
-                placeholder="Enter your phone"
+                placeholder="Password"
               secureTextEntryToggle
              value={password}
                 onChangeText={setPassword}
@@ -259,7 +263,7 @@ const RegisterScreen = () => {
               {/* Footer */}
               <View style={styles.footer}>
                 <Text style={styles.footerText}>Already have an account? </Text>
-                <TouchableOpacity onPress={() => console.log('Navigate to login')}>
+                <TouchableOpacity onPress={() => navigator.navigate("Login")}>
                   <Text style={styles.footerLink}>Sign In</Text>
                 </TouchableOpacity>
               </View>
